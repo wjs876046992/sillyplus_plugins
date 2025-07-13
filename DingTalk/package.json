@@ -1,0 +1,12 @@
+{
+    "name": "dingtalk",
+    "version": "1.0.0",
+    "license": "MIT",
+    "description": "钉钉企业内部机器人适配器",
+    "dependencies": {
+        "@alicloud/dingtalk": "^2.1.93",
+        "@alicloud/openapi-client": "^0.4.12",
+        "@alicloud/tea-util": "^1.4.10",
+        "dingtalk-stream": "^2.1.4"
+    }
+}
