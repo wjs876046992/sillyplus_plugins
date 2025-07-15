@@ -2,10 +2,10 @@
  * @name WeChatPadPro微信机器人
  * @author 落幕尽繁华
  * @origin 小白兔🐰
- * @version 1.0.0
+ * @version 1.0.1
  * @description WeChatPadPro适配器。依赖HTTP机器人适配器插件。
  * v1.0.0 init
- * @rule [指令前缀:gewe] [类目] [callback?]
+ * v1.0.1 依然是websocket，支持wechat 8.0.61，增加自动重连
  * @form {key: "wcpp.enabled", title: "启用WeChatPadPro适配器", tooltip: "默认不启用", required: false, valueType: 'switch'}
  * @form {key: "wcpp.wcpp_host", title: "WeChatPadPro机器人HTTP地址", tooltip: "需包含apiVersion路径", required: true}
  * @form {key: "wcpp.wcpp_admin_key", title: "WeChatPadPro 管理员Key", tooltip: "用于请求管理员的API，暂未支持自动生成auth key", required: false}
