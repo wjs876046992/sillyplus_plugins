@@ -2,11 +2,12 @@
  * @name 钉钉企业机器人
  * @author 落幕尽繁华
  * @origin 小白兔🐰
- * @version v1.0.0
+ * @version v1.0.1
  * @description 钉钉企业内部机器人。参考文档：https://open.dingtalk.com/document/orgapp/robot-receive-message
  * v1.0.0 接收&回复文本消息
+ * v1.0.1 增加回复图片消息和消息撤回功能
  * @form {key: "dingtalk.client_id", title: "Client ID (原 AppKey 和 SuiteKey)", required: true}
- * @form {key: "dingtalk.client_secret", title: "Client Secret (原 AppSecret 和 SuiteSecret)	", required: true}
+ * @form {key: "dingtalk.client_secret", title: "Client Secret (原 AppSecret 和 SuiteSecret)", required: true}
  * @public true
  * @disable false
  * @encrypt false
