@@ -30,6 +30,7 @@
  * @form {key: "jd_cookie.rabbit_pro_container_id", title: "容器ID", tooltip: "后台管理-容器管理，不清楚是什么就不配（需要重置就改为空），登录时会提示选择", required: false}
  * @form {key: "jd_cookie.rabbit_pro_sync", title: "同步ck开关", tooltip: "登录成功后是否立即触发同步，此操作是配合同步CK插件使用，将来源青龙的CK同步到目标青龙", valueType: "switch", default: false}
  * @public true
+ * @priority 1008
  * @disable false
  * @encrypt false
  * @class Rabbit
