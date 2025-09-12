@@ -36,6 +36,7 @@
  * @form {key: "qywxyy.aesKeyEncoding", title: "【企业微信应用】EncodingAESKey", tooltip: "回调配置-EncodingAESKey", required: true}
  * @form {key: "qywxyy.corpid", title: "【企业微信应用】企业ID" , tooltip: "开发者信息-企业ID", required: true}
  * @form {key: "qywxyy.corpsecret", title: "【企业微信应用】Secret", tooltip: "开发者信息-Secret", required: true}
+ * @form {key: "qywxyy.proxy", title: "【企业微信应用】代理", tooltip: "应用上设置的可信IP的http代理", required: false}
  * @form1 {key: "web_service.wcf_enabled", title: "启用wcf适配器", tooltip: "wcf微信机器人", required: false, valueType: 'switch'}
  * @form1 {key: "wx.wcf_host", title: "WeChat Ferry机器人HTTP地址", required: true}
  * @form {key: "web_service.tb_relation_auth_enabled", title: "【淘宝渠道备案】启用回调", tooltip: "暴露一个回调地址，搭配“淘宝渠道备案”插件使用", required: false, valueType: 'switch'}
