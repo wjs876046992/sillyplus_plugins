@@ -3,8 +3,9 @@
  * @author 落幕尽繁华
  * @origin 小白兔🐰
  * @description 返利注册。一套返利用户体系，记录不同渠道不同的用户信息，以及对应的渠道ID（订单跟踪ID）
- * @version v1.0.1
+ * @version v1.0.2
  * v1.0.1 增加插件描述
+ * v1.0.2 优化注册备案逻辑
  * @rule 返利注册
  * @form {key: "fanli.wxpusher_token", title: "wxpusher通知token", tooltip: "wxpusher通知token", required: false}
  * @public true
