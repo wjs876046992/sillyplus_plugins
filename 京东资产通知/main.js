@@ -2,7 +2,7 @@
  * @name 京东资产通知
  * @author 落幕尽繁华
  * @origin 小白兔🐰
- * @version 1.0.7
+ * @version 1.0.8
  * @description 配合计划任务，定时推送京东资产通知
  * v1.0.1 修复查询逻辑，仅通知到wxpusher账号，需要在青龙备注里配置了UID
  * v1.0.2 适配qinglong的存储方式
@@ -13,6 +13,7 @@
  * v1.0.5-alpha.3 移除旧农场
  * v1.0.6 修复京东资产查询相关API
  * v1.0.7 增加忽略的京东PIN
+ * v1.0.8 适配新版API
  * @rule 资产通知
  * @form {key: "notice.assert_qq", title: "qq通知开关", tooltip: "是否启用qq通知，开启后默认取qq下的admin、bot_id", valueType: 'switch'}
  * @form {key: "notice.assert_wx", title: "wx通知开关", tooltip: "是否启用微信通知，开启后默认取wx下的admin、bot_id", valueType: 'switch'}
