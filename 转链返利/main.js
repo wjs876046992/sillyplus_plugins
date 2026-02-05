@@ -2,7 +2,7 @@
  * @name 转链返利
  * @origin 小白兔🐰
  * @author 落幕尽繁华
- * @version v1.1.6
+ * @version v1.1.7
  * @description 京东、淘宝、拼多多，转链返利
  * v1.0.0 初始化
  * v1.0.1 支持京东3.cn, u.jd.cn
@@ -25,12 +25,15 @@
  * v1.1.4-alpha.2 修复存在批量转链时，跟单问题
  * v1.1.5 增加饿了么和美团优惠券链接
  * v1.1.6 京品库链接从https改为http
+ * v1.1.7 京品库不能用了，增加折京客和京推推两种方式转链
  * @rule ^\-s$|^\-h$
  * @rule ^mt$|^meituan$|^美团$
  * @rule ^elm$|^eleme$|^饿了么$
- * @rule raw (https?:\/\/[^\s<>]*(taobao\.|tb\.)[^\s<>]+|[^一-龥0-9a-zA-Z=;&?-_.<>:'",{}][0-9a-zA-Z()]{11}[^一-龥0-9a-zA-Z=;&?-_.<>:'",{}\s])
- * @rule raw (https?:\/\/[^\s<>]*(3\.cn|jd\.|jingxi)[^\s<>]+|[^一-龥0-9a-zA-Z=;&?-_.<>:'",{}][0-9a-zA-Z()]{16}[^一-龥0-9a-zA-Z=;&?-_.<>:'",{}\s])
- * @rule raw (https?:\/\/[^\s<>]*(yangkeduo|pinduoduo)[^\s<>]+)
+ * @rule raw (https?:\/\/[^\s<>,)"'\]]*(?:taobao\.com|tb\.|tmall\.)[^\s<>,)"'\]]+)
+ * @rule raw (https?:\/\/[^\s<>,)"'\]]*(?:3\.cn|jd\.com|jingxi\.com)[^\s<>,)"'\]]+)
+ * @rule raw (https?:\/\/[^\s<>,)"'\]]*(?:yangkeduo\.com|pinduoduo\.com)[^\s<>,)"'\]]+)
+ * @rule raw ([^一-龥0-9a-zA-Z=;&?-_.<>:'",{}][0-9a-zA-Z()]{11}[^一-龥0-9a-zA-Z=;&?-_.<>:'",{}\s])
+ * @rule raw ([^一-龥0-9a-zA-Z=;&?-_.<>:'",{}][0-9a-zA-Z()]{16}[^一-龥0-9a-zA-Z=;&?-_.<>:'",{}\s])
  * @priority 999
  * @form {key: "fanli.mongodb", "title": "Mongodb地址", required: true, tooltip:"MongoDB版本大于4.0，例：mongodb://localhost:27017"}
  * @form {key: "fanli.bj_show_yj", title: "显示佣金", valueType: 'switch'}
@@ -47,8 +50,13 @@
  * @form {key: "fanli.tb_zhetaoke_appkey", "title": "折淘客APP_KEY", tooltip: "折淘客的对接秘钥appkey", required: true}
  * @form {key: "fanli.tb_rake", "title": "淘宝返佣比例", required: true, valueType: "digit", tooltip:"默认0"}
  * @form {key: "fanli.jd_union_id", "title": "京东联盟ID", required: true}
+ * @form {key: "fanli.use_zjk", "title": "使用【折京客】", tooltip: "使用折京客转京东链接，默认为false，配置和折淘客一样，唯一区别就是不能生成口令", required: true, valueType: "switch"}
+ * @form {key: "fanli.use_jpk", "title": "使用【京品库】", tooltip: "使用京品库转京东链接，默认为true", required: true, valueType: "switch"}
  * @form {key: "fanli.jd_jingpinku_appid", "title": "京品库APP_ID", required: true}
  * @form {key: "fanli.jd_jingpinku_appkey", "title": "京品库APP_KEY", required: true}
+ * @form {key: "fanli.use_jtt", "title": "使用【京推推】", tooltip: "使用京推推转京东链接，可生成口令", required: true, valueType: "switch"}
+ * @form {key: "fanli.jd_jtt_appid", "title": "京推推APP_ID", required: true}
+ * @form {key: "fanli.jd_jtt_appkey", "title": "京推推APP_KEY", required: true}
  * @form {key: "fanli.jd_rake", "title": "京东返佣比例", required: true, valueType: "digit", tooltip:"默认0"}
  * @form {key: "fanli.jd_kl", "title": "是否京东生成口令", valueType: "switch", tooltip:"默认不生成，只有配置京品库相关参数才能生成"}
  * @form {key: "fanli.pdd_client_id", "title": "多多进宝ClientID", required: true}
