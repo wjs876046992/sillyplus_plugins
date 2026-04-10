@@ -2,7 +2,7 @@
  * @name 转链返利
  * @origin 小白兔🐰
  * @author 落幕尽繁华
- * @version v1.1.7
+ * @version v1.1.8
  * @description 京东、淘宝、拼多多，转链返利
  * v1.0.0 初始化
  * v1.0.1 支持京东3.cn, u.jd.cn
@@ -26,6 +26,7 @@
  * v1.1.5 增加饿了么和美团优惠券链接
  * v1.1.6 京品库链接从https改为http
  * v1.1.7 京品库不能用了，增加折京客和京推推两种方式转链
+ * v1.1.8 折京客支持返回口令
  * @rule ^\-s$|^\-h$
  * @rule ^mt$|^meituan$|^美团$
  * @rule ^elm$|^eleme$|^饿了么$
