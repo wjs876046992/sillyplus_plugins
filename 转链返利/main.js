@@ -52,9 +52,9 @@
  * @form {key: "fanli.tb_rake", "title": "淘宝返佣比例", required: true, valueType: "digit", tooltip:"默认0"}
  * @form {key: "fanli.jd_union_id", "title": "京东联盟ID", required: true}
  * @form {key: "fanli.use_zjk", "title": "使用【折京客】", tooltip: "使用折京客转京东链接，默认为false，配置和折淘客一样，唯一区别就是不能生成口令", required: true, valueType: "switch"}
- * @form {key: "fanli.use_jpk", "title": "使用【京品库】", tooltip: "使用京品库转京东链接，默认为true", required: true, valueType: "switch"}
- * @form {key: "fanli.jd_jingpinku_appid", "title": "京品库APP_ID", required: true}
- * @form {key: "fanli.jd_jingpinku_appkey", "title": "京品库APP_KEY", required: true}
+ * @form1 {key: "fanli.use_jpk", "title": "使用【京品库】", tooltip: "使用京品库转京东链接，默认为true", required: true, valueType: "switch"}
+ * @form1 {key: "fanli.jd_jingpinku_appid", "title": "京品库APP_ID", required: true}
+ * @form1 {key: "fanli.jd_jingpinku_appkey", "title": "京品库APP_KEY", required: true}
  * @form {key: "fanli.use_jtt", "title": "使用【京推推】", tooltip: "使用京推推转京东链接，可生成口令", required: true, valueType: "switch"}
  * @form {key: "fanli.jd_jtt_appid", "title": "京推推APP_ID", required: true}
  * @form {key: "fanli.jd_jtt_appkey", "title": "京推推APP_KEY", required: true}
