@@ -2,7 +2,7 @@
  * @name 小白兔🐰通用模块(必须安装)
  * @author 落幕尽繁华
  * @origin 小白兔🐰
- * @version 2.1.0
+ * @version 2.2.0
  * @description 该插件会自动安装小白兔插件所须依赖，所以需要时间比较长，安装时请耐心等待。
  * 问题：傻妞不能在node版中注册RESTful API，所以用express搭建一个web服务，用于注册扩展API。可自定义端口（默认30000），然后通过反代暴露接口到公网。
  * 请求：http://ip:30000/ping，返回已支持的适配器。
@@ -17,6 +17,7 @@
  * v2.0.2 修复依赖安装问题，增加插件注册和注销接口
  * v2.0.3 增加Pagermaid-Pyro适配器Node版，地址为 post http://ip:30000/bot/pagermaid，默认需手动开启
  * v2.1.0 修改配置参数名称，更加语义化；修改企业微信客服媒体发送问题；增加企业微信应用适配器，地址为 post http://ip:30000/api/bot/qywxyy，默认需手动开启
+ * v2.2.0 增加ilink-wechat适配器，地址为 post http://ip:30000/api/bot/ilink，默认需手动开启
  * @rule 修复依赖
  * @form {key: "jd_sign.sign_host", title: "JD签名地址" , tooltip: "资产通知、查询等需要的h5st和sign，没有则使用内置", required: false}
  * @form {key: "jd_sign.proxy_url", title: "获取代理的地址" , tooltip: "资产通知、查询等需要的代理，支持星空、携趣等", required: false}
@@ -37,6 +38,13 @@
  * @form {key: "qywxyy.corpid", title: "【企业微信应用】企业ID" , tooltip: "开发者信息-企业ID", required: true}
  * @form {key: "qywxyy.corpsecret", title: "【企业微信应用】Secret", tooltip: "开发者信息-Secret", required: true}
  * @form {key: "qywxyy.proxy", title: "【企业微信应用】代理", tooltip: "应用上设置的可信IP的http代理", required: false}
+ * @form1 {key: "web_service.wxfwh_enabled", title: "【微信服务号】启用适配器", tooltip: "参考文档 https://developer.work.weixin.qq.com/document/path/90226", required: false, valueType: 'switch'}
+ * @form1 {key: "wxfwh.token", title: "【微信服务号】Token", tooltip: "回调配置-Token", required: true}
+ * @form1 {key: "wxfwh.aesKeyEncoding", title: "【微信服务号】EncodingAESKey", tooltip: "回调配置-EncodingAESKey", required: true}
+ * @form1 {key: "wxfwh.ghid", title: "【微信服务号】公众号/服务号ID" , tooltip: "开发者信息-企业ID", required: true}
+ * @form1 {key: "wxfwh.appid", title: "【微信服务号】开发者ID(AppID)" , tooltip: "开发者信息-企业ID", required: true}
+ * @form1 {key: "wxfwh.appsecret", title: "【微信服务号】开发者密码(AppSecret)", tooltip: "开发者信息-Secret", required: true}
+ * @form1 {key: "wxfwh.proxy", title: "【微信服务号】代理", tooltip: "公众号/服务号上设置的可信IP的http代理", required: false}
  * @form1 {key: "web_service.wcf_enabled", title: "启用wcf适配器", tooltip: "wcf微信机器人", required: false, valueType: 'switch'}
  * @form1 {key: "wx.wcf_host", title: "WeChat Ferry机器人HTTP地址", required: true}
  * @form {key: "web_service.tb_relation_auth_enabled", title: "【淘宝渠道备案】启用回调", tooltip: "暴露一个回调地址，搭配“淘宝渠道备案”插件使用", required: false, valueType: 'switch'}
@@ -45,6 +53,10 @@
  * @form {key: "pmp.ws_reverse", title: "【Pagermaid-Pyro】链接地址", tooltip: "傻妞的通讯地址用于生成插件，请如实填写，写错概不负责。", required: true}
  * @form {key: "pmp.secure_token", title: "【Pagermaid-Pyro】安全Token", tooltip: "用于安全验证，自动生成。", required: true}
  * @form {key: "pmp.disable_apt_source", title: "【Pagermaid-Pyro】禁用插件源", valueType: 'switch', tooltip: "对接成功后自动禁用插件源，后续升级需要该选项打开一下。", required: true}
+ * @form {key: "web_service.ilink_enabled", title: "【ilink-wechat】启用适配器", tooltip: "对接ilink-wechat独立服务，接收WeChat消息并回复。地址为 POST /api/bot/ilink", required: false, valueType: 'switch'}
+ * @form {key: "ilink.auth_token", title: "【ilink-wechat】认证Token", tooltip: "可选，ilink-wechat请求时带在Authorization头中的token，留空则不校验", required: false}
+ * @form {key: "ilink.callback_url", title: "【ilink-wechat】异步回调地址", tooltip: "异步模式下ilink-wechat的回调服务地址，例如 http://ilink-host:8765/callback", required: false}
+ * @form {key: "ilink.callback_auth_token", title: "【ilink-wechat】异步回调认证Token", tooltip: "可选，回调时放在Authorization头中的token", required: false}
  * @public true
  * @admin true
  * @disable false
@@ -277,7 +289,7 @@ const {spawn} = require('child_process');
 
 const installYarnDeps = (nodeExec, yarnExec, pluginsDir) => {
     return new Promise((resolve, reject) => {
-        const child = spawn(nodeExec, [`${yarnExec}.js`, 'install'], {cwd: pluginsDir});
+        const child = spawn(nodeExec, [`${yarnExec}.js`, 'install', '--production'], {cwd: pluginsDir});
 
         child.stdout.on('data', (data) => {
             console.log(data.toString()); // 实时输出到控制台
@@ -329,13 +341,13 @@ const installDeps = async () => {
             "!encrypted"
         ],
         "dependencies": {
-            "axios": "^1.7.9",
+            "axios": "^1.13.5",
             "crypto-js": "^4.1.1",
             "express": "^4.21.2",
             "ioredis": "^5.3.2",
             "moment": "^2.29.4",
             "mongoose": "^6.13.8",
-            "qs": "^6.12.1",
+            "qs": "^6.14.2",
             "tunnel": "^0.0.6",
             "uuid": "^9.0.1"
         },
@@ -344,6 +356,7 @@ const installDeps = async () => {
             "@babel/preset-env": "^7.25.4",
             "babel-loader": "^9.2.1",
             "javascript-obfuscator": "^4.1.1",
+            "jest": "^30.1.3",
             "terser-webpack-plugin": "^5.3.10",
             "webpack": "^5.95.0",
             "webpack-bundle-analyzer": "^4.10.2",
