@@ -18,6 +18,8 @@
  * v2.0.3 增加Pagermaid-Pyro适配器Node版，地址为 post http://ip:30000/bot/pagermaid，默认需手动开启
  * v2.1.0 修改配置参数名称，更加语义化；修改企业微信客服媒体发送问题；增加企业微信应用适配器，地址为 post http://ip:30000/api/bot/qywxyy，默认需手动开启
  * v2.2.0 增加ilink-wechat适配器，地址为 post http://ip:30000/api/bot/ilink，默认需手动开启
+ * v2.3.0 增加QQ Bot适配器，地址为 post http://ip:30000/api/bot/qqbot，默认需手动开启
+ * v2.4.0 QQ Bot适配器增加频道消息(AT_MESSAGE_CREATE)和频道私信(DIRECT_MESSAGE_CREATE)支持，需开启"启用频道消息"选项
  * @rule 修复依赖
  * @form {key: "jd_sign.sign_host", title: "JD签名地址" , tooltip: "资产通知、查询等需要的h5st和sign，没有则使用内置", required: false}
  * @form {key: "jd_sign.proxy_url", title: "获取代理的地址" , tooltip: "资产通知、查询等需要的代理，支持星空、携趣等", required: false}
@@ -57,6 +59,11 @@
  * @form {key: "ilink.auth_token", title: "【ilink-wechat】认证Token", tooltip: "可选，ilink-wechat请求时带在Authorization头中的token，留空则不校验", required: false}
  * @form {key: "ilink.callback_url", title: "【ilink-wechat】异步回调地址", tooltip: "异步模式下ilink-wechat的回调服务地址，例如 http://ilink-host:8765/callback", required: false}
  * @form {key: "ilink.callback_auth_token", title: "【ilink-wechat】异步回调认证Token", tooltip: "可选，回调时放在Authorization头中的token", required: false}
+ * @form {key: "web_service.qqbot_enabled", title: "【QQ Bot】启用适配器", tooltip: "对接QQ Bot官方webhook，接收群消息/私聊消息。地址为 POST /api/bot/qqbot，参考文档 https://bot.q.qq.com/wiki/develop/api-v2/", required: false, valueType: 'switch'}
+ * @form {key: "qqbot.appId", title: "【QQ Bot】AppId", tooltip: "QQ Bot开放平台-AppId", required: true}
+ * @form {key: "qqbot.appSecret", title: "【QQ Bot】AppSecret", tooltip: "QQ Bot开放平台-AppSecret", required: true}
+ * @form {key: "qqbot.ws_mode", title: "【QQ Bot】启用WebSocket模式", tooltip: "启用后将主动连接QQ Bot网关(wss://api.sgroup.qq.com/websocket)接收事件，无需公网Webhook地址，与Webhook模式可同时开启", required: false, valueType: 'switch'}
+ * @form {key: "qqbot.guild_enabled", title: "【QQ Bot】启用频道消息", tooltip: "启用后额外订阅频道@消息(AT_MESSAGE_CREATE)和频道私信(DIRECT_MESSAGE_CREATE)事件，WS模式下需重启生效；bot需在QQ开放平台开通相应权限", required: false, valueType: 'switch'}
  * @public true
  * @admin true
  * @disable false
