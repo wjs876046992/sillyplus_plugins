@@ -1,3 +1,4 @@
+global.sillygirl = require('sillygirl');
 /**
  * @name rabbit-pro
  * @author 落幕尽繁华
@@ -37,7 +38,6 @@
  * @create_at 2099-01-01 19:19:59
  * @icon https://www.svgrepo.com/show/398149/rabbit-face.svg
  */
-global.sillygirl = require('sillygirl');
 const modules = require('./modules');
 
 !(async () => {
