@@ -1,3 +1,4 @@
+global.sillygirl = require('sillygirl');
 /**
  * @name 佣金提现
  * @author 落幕尽繁华
