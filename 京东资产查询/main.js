@@ -1,3 +1,4 @@
+global.sillygirl = require('sillygirl');
 /**
  * @name 京东资产查询
  * @author 落幕尽繁华
@@ -14,8 +15,7 @@
  * v1.0.5-alpha.3 移除旧农场
  * v1.0.6 修复京东资产查询相关API
  * v1.0.7 适配新版API
- * @rule [cmd:查询,卡券,红包,京豆] [ql?] [pinIndex?]
- * @form {key: "notice.assert_ql_client_id", title: "青龙client_id", tooltip: "青龙client_id，在qinglong存储器中，多个用逗号分隔，不填则默认取第一个"}
+ * @rule [cmd:查询,卡券,红包,京豆] [ql?] [pin?]
  * @admin false
  * @public true
  * @priority 1010
