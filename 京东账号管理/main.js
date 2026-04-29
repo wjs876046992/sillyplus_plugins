@@ -1,3 +1,4 @@
+global.sillygirl = require('sillygirl');
 /**
  * @name 京东账号管理
  * @origin 小白兔🐰
