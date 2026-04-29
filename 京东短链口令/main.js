@@ -1,3 +1,4 @@
+global.sillygirl = require('sillygirl');
 /**
  * @name 京东短链口令
  * @author 落幕尽繁华
