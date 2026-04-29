@@ -1,3 +1,4 @@
+global.sillygirl = require('sillygirl');
 /**
  * @name 转链返利
  * @origin 小白兔🐰
