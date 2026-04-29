@@ -4310,7 +4310,6 @@ module.exports = CQ;
 /***/ 498
 (module, __unused_webpack_exports, __webpack_require__) {
 
-/* module decorator */ module = __webpack_require__.nmd(module);
 function safeRequire(moduleName) {
   try {
     return __webpack_require__(213)(moduleName);
@@ -4321,19 +4320,6 @@ function safeRequire(moduleName) {
     }
     throw err; // 其他错误继续抛出
   }
-}
-
-// 调试模块解析路径
-console.log('__dirname:', __dirname);
-console.log('process.cwd():', process.cwd());
-console.log('module.paths:', module.paths);
-console.log('require.resolve.paths("sillygirl"):', __webpack_require__(213).resolve.paths('sillygirl'));
-
-// 尝试手动查找
-try {
-  console.log('Resolved sillygirl path:', /*require.resolve*/(519));
-} catch (e) {
-  console.log('Cannot resolve sillygirl:', e.message);
 }
 var sg = safeRequire('sillygirl');
 var _require = __webpack_require__(520),
@@ -7044,14 +7030,6 @@ module.exports = require("moment");
 
 /***/ },
 
-/***/ 519
-(module) {
-
-"use strict";
-module.exports = require("sillygirl");
-
-/***/ },
-
 /***/ 982
 (module) {
 
@@ -7130,16 +7108,13 @@ module.exports = require("url");
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			id: moduleId,
-/******/ 			loaded: false,
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
 /******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -7149,15 +7124,6 @@ module.exports = require("url");
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/node module decorator */
-/******/ 	(() => {
-/******/ 		__webpack_require__.nmd = (module) => {
-/******/ 			module.paths = [];
-/******/ 			if (!module.children) module.children = [];
-/******/ 			return module;
-/******/ 		};
 /******/ 	})();
 /******/ 	
 /************************************************************************/
