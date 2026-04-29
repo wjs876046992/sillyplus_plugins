@@ -39,7 +39,7 @@
  */
 const modules = require('./modules');
 
-(async () => {
+!(async () => {
     for (const [name, module] of Object.entries(modules)) {
         if (typeof module === 'function') {  // 如果模块启用且是可调用函数
             await module();  // 执行模块
