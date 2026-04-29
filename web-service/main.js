@@ -396,7 +396,6 @@ const installDeps = async () => {
             "axios": "^1.13.5",
             "crypto-js": "^4.1.1",
             "express": "^4.21.2",
-            "ioredis": "^5.3.2",
             "moment": "^2.29.4",
             "mongoose": "^6.13.8",
             "qs": "^6.14.2",
