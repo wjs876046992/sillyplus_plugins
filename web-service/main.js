@@ -2,7 +2,7 @@
  * @name 小白兔🐰通用模块(必须安装)
  * @author 落幕尽繁华
  * @origin 小白兔🐰
- * @version 2.2.0
+ * @version 2.4.1
  * @description 该插件会自动安装小白兔插件所须依赖，所以需要时间比较长，安装时请耐心等待。
  * 问题：傻妞不能在node版中注册RESTful API，所以用express搭建一个web服务，用于注册扩展API。可自定义端口（默认30000），然后通过反代暴露接口到公网。
  * 请求：http://ip:30000/ping，返回已支持的适配器。
@@ -20,6 +20,7 @@
  * v2.2.0 增加ilink-wechat适配器，地址为 post http://ip:30000/api/bot/ilink，默认需手动开启
  * v2.3.0 增加QQ Bot适配器，地址为 post http://ip:30000/api/bot/qqbot，默认需手动开启
  * v2.4.0 QQ Bot适配器增加频道消息(AT_MESSAGE_CREATE)和频道私信(DIRECT_MESSAGE_CREATE)支持，需开启"启用频道消息"选项
+ * v2.4.1 删除dev依赖，修复依赖调整
  * @rule 修复依赖
  * @form {key: "jd_sign.sign_host", title: "JD签名地址" , tooltip: "资产通知、查询等需要的h5st和sign，没有则使用内置", required: false}
  * @form {key: "jd_sign.proxy_url", title: "获取代理的地址" , tooltip: "资产通知、查询等需要的代理，支持星空、携趣等", required: false}
@@ -76,6 +77,7 @@
 const {Bucket, console, sender: s} = require('sillygirl');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
+const {spawn} = require('child_process');
 const getRawBody = require('raw-body');
 const jsonBigInt = require('json-bigint')({"storeAsString": true});
 
@@ -292,28 +294,70 @@ const register = async () => {
     await setEventListener(app);
 };
 
-const {spawn} = require('child_process');
+function spawnExec(command, args = [], options = {}) {
+    const {
+        cwd,
+        env,
+        stdio = 'pipe',
+        shell = false
+    } = options;
 
-const installYarnDeps = (nodeExec, yarnExec, pluginsDir) => {
     return new Promise((resolve, reject) => {
-        const child = spawn(nodeExec, [`${yarnExec}.js`, 'install', '--production'], {cwd: pluginsDir});
-
-        child.stdout.on('data', (data) => {
-            console.log(data.toString()); // 实时输出到控制台
+        const child = spawn(command, args, {
+            cwd,
+            env: { ...process.env, ...env },
+            stdio,
+            shell
         });
 
-        child.stderr.on('data', (data) => {
-            console.log(data.toString()); // 实时输出错误
+        let stdout = '';
+        let stderr = '';
+
+        if (child.stdout) {
+            child.stdout.on('data', (data) => {
+                stdout += data.toString();
+            });
+        }
+
+        if (child.stderr) {
+            child.stderr.on('data', (data) => {
+                stderr += data.toString();
+            });
+        }
+
+        child.on('error', (err) => {
+            reject(err);
         });
 
         child.on('close', (code) => {
             if (code === 0) {
-                resolve();
+                resolve({ stdout, stderr, code });
             } else {
-                reject(new Error(`yarn install exited with code ${code}`));
+                const error = new Error(`Command failed: ${command} ${args.join(' ')}`);
+                error.code = code;
+                error.stdout = stdout;
+                error.stderr = stderr;
+                reject(error);
             }
         });
     });
+}
+
+const installYarnDeps = async (nodeExec, yarnExec, pluginsDir) => {
+    const { stdout, stderr } = await spawnExec(
+        nodeExec,
+        [
+            `${yarnExec}.js`,
+            'install',
+            '--production'
+        ],
+        {
+            cwd: pluginsDir
+        }
+    );
+
+    if (stdout) console.log(stdout);
+    if (stderr) console.error(stderr);
 };
 
 const installDeps = async () => {
@@ -321,6 +365,7 @@ const installDeps = async () => {
     let install_package = JSON.parse(await webServiceDB.get('install_package', 'true'));
     if (!install_package) {
         console.log('已设置不自动安装包管理, End');
+        await s.reply('已设置不自动安装包管理, 如需安装请发送“set web_service install_package true”');
         return;
     }
 
@@ -359,17 +404,6 @@ const installDeps = async () => {
             "uuid": "^9.0.1"
         },
         "devDependencies": {
-            "@babel/core": "^7.25.2",
-            "@babel/preset-env": "^7.25.4",
-            "babel-loader": "^9.2.1",
-            "javascript-obfuscator": "^4.1.1",
-            "jest": "^30.1.3",
-            "terser-webpack-plugin": "^5.3.10",
-            "webpack": "^5.95.0",
-            "webpack-bundle-analyzer": "^4.10.2",
-            "webpack-cli": "^5.1.4",
-            "webpack-merge": "^6.0.1",
-            "webpack-node-externals": "^3.0.0"
         }
     };
     // 写入 package.json 文件
@@ -380,9 +414,23 @@ const installDeps = async () => {
     const {
         stdout,
         stderr
-    } = await exec(`${nodeExec} ${yarnExec}.js config set registry https://registry.npmmirror.com`, {cwd: pluginsDir});
+    } = await spawnExec(
+        nodeExec,
+        [
+            `${yarnExec}.js`,
+            'config',
+            'set',
+            'registry',
+            'https://registry.npmmirror.com'
+        ],
+        {
+            cwd: pluginsDir,
+            stdio: ['ignore', 'pipe', 'pipe']
+        }
+    );
     if (stderr) {
         console.error(`exec error: ${stderr}`);
+        await s.reply(stderr);
         return;
     }
     console.log(`stdout: ${stdout}`);
