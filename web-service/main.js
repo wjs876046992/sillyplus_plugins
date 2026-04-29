@@ -1,3 +1,4 @@
+global.sillygirl = require('sillygirl');
 /**
  * @name 小白兔🐰通用模块(必须安装)
  * @author 落幕尽繁华
