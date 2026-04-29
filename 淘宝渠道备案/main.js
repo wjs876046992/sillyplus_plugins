@@ -1,3 +1,4 @@
+global.sillygirl = require('sillygirl');
 /**
  * @name 淘宝渠道备案
  * @author 落幕尽繁华
