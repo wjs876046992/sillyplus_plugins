@@ -75,226 +75,9 @@ global.sillygirl = require('sillygirl');
  * @create_at 2099-01-01 20:20:00
  * @icon https://img.icons8.com/?size=100&id=DJWlbd0VP2As&format=png&color=000000
  */
-const {Bucket, console, sender: s} = require('sillygirl');
+const {Bucket, console, sender: s} = require('@mod/platform');
 const util = require('util');
-const exec = util.promisify(require('child_process').exec);
 const {spawn} = require('child_process');
-const getRawBody = require('raw-body');
-const jsonBigInt = require('json-bigint')({"storeAsString": true});
-
-
-async function supportRegister(app, webServiceDB) {
-
-    const PluginManager = require('./modules/PluginManager');
-    const pluginManager = new PluginManager(app, '/api/bot');
-
-    // reload cached remote plugins
-    const registeredPlugins = await webServiceDB.get('registered_plugins', {});
-    for (const [name, filePath] of Object.entries(registeredPlugins)) {
-        try {
-            await pluginManager.register(name, filePath);
-            registeredPlugins[name] = filePath;
-        } catch (e) {
-            delete registeredPlugins[name];
-        }
-    }
-    await webServiceDB.set('registered_plugins', registeredPlugins);
-
-    // 允许注册插件
-    app.post('/api/plugins/register', async (req, res) => {
-        const body = req.body;
-        try {
-            const registeredPlugins = await webServiceDB.get('registered_plugins', {});
-            for (const [name, plugin] of Object.entries(body)) {
-                await pluginManager.register(name, plugin);
-                registeredPlugins[name] = plugin;
-            }
-            await webServiceDB.set('registered_plugins', registeredPlugins);
-        } catch (e) {
-            console.error(e.message);
-            return res.status(500).send('Error registering plugin');
-        }
-
-        return res.status(200).send('Plugin registered');
-    });
-    app.post('/api/plugins/unregister', async (req, res) => {
-        const {name} = req.body;
-        try {
-            pluginManager.unregister(name);
-            const registeredPlugins = await webServiceDB.get('registered_plugins', {});
-            if (registeredPlugins[name]) {
-                console.log(`Unregistering plugin: ${name}, file: ${registeredPlugins[name]}`);
-                delete registeredPlugins[name];
-                await webServiceDB.set('registered_plugins', registeredPlugins);
-            }
-            res.send(`Plugin "${name}" unregistered.`);
-        } catch (err) {
-            res.status(500).send(err.message);
-        }
-        return res.status(200).send('Success: Plugin registered');
-    });
-    // 查询已注册插件
-    app.get('/api/plugins/list', (req, res) => {
-        res.json(pluginManager.list());
-    });
-}
-
-const register = async () => {
-    const http = require('http'), net = require('net'), Express = require('express'), WebSocket = require('ws');
-
-    /**
-     * 检查端口是否被占用
-     * @param port 端口号
-     * @returns {Promise<unknown>}
-     */
-    const checkPort = (port) => {
-        return new Promise((resolve, reject) => {
-            const tester = net.createServer()
-                .once('error', (err) => {
-                    if (err.code === 'EADDRINUSE') {
-                        reject(`端口 ${port} 已被占用`);
-                    } else {
-                        reject(err);
-                    }
-                })
-                .once('listening', () => {
-                    tester.once('close', () => resolve())
-                        .close();
-                })
-                .listen(port);
-        });
-    };
-
-    /**
-     * 获取占用端口的进程ID并终止
-     * @param port 端口号
-     * @returns {Promise<string>}
-     */
-    const killProcessUsingPort = async (port) => {
-        try {
-            // 查找占用端口的进程PID
-            const {stdout} = await exec(`lsof -t -i:${port}`);
-            const pid = stdout.trim();
-            if (!pid) {
-                throw new Error('无法找到占用端口的进程');
-            }
-            // 杀掉进程
-            await exec(`kill -9 ${pid}`);
-            return `进程 ${pid} 已被终止`;
-        } catch (err) {
-            throw new Error('终止进程失败: ' + (err.message || err));
-        }
-    };
-
-    /**
-     * 检查是否可以运行服务器
-     * @param port 端口号
-     * @throws {Error} 如果端口被占用且无法终止进程
-     * @returns {Promise<void>}
-     */
-    async function checkCanRun(port) {
-        let canRun = false;
-        try {
-            await checkPort(port);
-            canRun = true;
-        } catch (err) {
-            console.log(err);
-            console.log(`尝试终止占用端口的进程...`);
-            try {
-                const killMsg = await killProcessUsingPort(port);
-                console.log(killMsg);
-                canRun = true;
-            } catch (killErr) {
-                console.log(killErr);
-            }
-        }
-
-        if (!canRun) {
-            throw Error(`无法启动服务器，端口 ${PORT} 已被占用`);
-        }
-    }
-
-
-    const webServiceDB = new Bucket('web_service');
-    let PORT = await webServiceDB.get('PORT');
-    if (!PORT) { // 初始化端口，并保存到数据库
-        PORT = 30000;
-        await webServiceDB.set('PORT', PORT);
-    }
-
-    await checkCanRun(PORT);
-
-    const app = new Express();
-    app.get('/health', (req, res) => {
-        res.status(200).send('Web service is running');
-    });
-
-    // 设置 Express 中间件, 用于解析 JSON 请求体, big int 支持
-    app.use(async (req, res, next) => {
-        if (
-            req.headers['content-type'] &&
-            req.headers['content-type'].includes('application/json')
-        ) {
-            try {
-                const raw = await getRawBody(req, {
-                    length: req.headers['content-length'],
-                    limit: '1mb',
-                    encoding: 'utf-8'
-                });
-
-                req.rawBody = raw;
-                req.body = jsonBigInt.parse(raw, null); // 使用 json-bigint 解析 JSON
-            } catch (err) {
-                return res.status(400).send('Invalid JSON');
-            }
-        }
-        next();
-    });
-
-    // inner route: 企业微信客服、WeChat Ferry、淘宝渠道备案、wxpusher返利注册
-    const modules = require('./modules');
-    for (const [name, module] of Object.entries(modules)) {
-        const enabled = await webServiceDB.get(`${name}_enabled`, false);  // 根据模块名获取启用状态
-        console.log(`模块 ${name} 启用状态：${enabled}`);
-        if (enabled && typeof module === 'function') {  // 如果模块启用且是可调用函数
-            await module(app);  // 执行模块并传入 app
-        }
-    }
-    // 添加插件注册功能
-    await supportRegister(app, webServiceDB);
-
-    /**
-     * 设置事件监听器
-     * 创建 HTTP 服务器和 WebSocket 服务器，并监听连接和消息事件
-     * @param expressApp Express 应用实例
-     * @returns {Promise<void>}
-     * @throws {Error} 如果端口被占用且无法终止进程
-     * @description 该函数创建一个 HTTP 服务器，并在其上创建一个 WebSocket 服务器。
-     * 它监听 WebSocket 连接事件，并在连接时设置消息监听器。
-     * 当接收到消息时，它会打印消息内容并向客户端发送回应。
-     * 当 WebSocket 连接关闭时，它会打印连接关闭的消息。
-     * 最后，它启动 HTTP 服务器并监听指定端口。
-     * @example
-     * setEventListener();
-     * // 调用该函数后，服务器将开始监听 WebSocket 连接和消息
-     */
-    async function setEventListener(expressApp) {
-        // 创建 HTTP 服务器
-        const server = http.createServer(expressApp);
-        const pgp_enabled = await webServiceDB.get('pgp_enabled', false);
-        if (pgp_enabled) {
-            const pagermaid = require('./modules/pagermaid');
-            await pagermaid(server, app);
-        }
-
-        server.listen(PORT, () => {
-            console.log(`服务器正在运行，支持 HTTP 和 WebSocket，端口: ${PORT}`);
-        });
-    }
-
-    await setEventListener(app);
-};
-
 function spawnExec(command, args = [], options = {}) {
     const {
         cwd,
@@ -346,9 +129,8 @@ function spawnExec(command, args = [], options = {}) {
 
 const installYarnDeps = async (nodeExec, yarnExec, pluginsDir) => {
     const { stdout, stderr } = await spawnExec(
-        nodeExec,
+        yarnExec,
         [
-            `${yarnExec}.js`,
             'install',
             '--production'
         ],
@@ -374,10 +156,6 @@ const installDeps = async () => {
     const path = require('path');
     // 获取父目录路径 => /path/to/plugins
     const pluginsDir = path.resolve(__dirname, '..');
-    const homeDir = path.resolve(pluginsDir, '..');
-    const nodeDir = path.resolve(homeDir, 'language/node');
-    const nodeExec = path.resolve(nodeDir, 'node');
-    const yarnExec = path.resolve(nodeDir, 'yarn/bin/yarn');
 
     // 检查父目录是否存在 package.json
     const packageJsonPath = path.join(pluginsDir, 'package.json');
@@ -415,9 +193,8 @@ const installDeps = async () => {
         stdout,
         stderr
     } = await spawnExec(
-        nodeExec,
+        yarnExec,
         [
-            `${yarnExec}.js`,
             'config',
             'set',
             'registry',
@@ -438,7 +215,7 @@ const installDeps = async () => {
 
     // 执行 yarn install
     await s.reply('正在yarn install安装依赖, 可能需要2min, 请耐心等待...');
-    await installYarnDeps(nodeExec, yarnExec, pluginsDir);
+    await installYarnDeps('node', 'yarn', pluginsDir);
     await s.reply('依赖安装完成, 成功加载小白兔🐰通用模块');
 }
 // 依赖管理
@@ -449,9 +226,7 @@ const installDeps = async () => {
             console.error('依赖安装失败:', err);
         });
 
-        await register().catch(err => {
-            console.error('Web服务注册失败:', err);
-        });
+        // 适配器已拆分，无需注册 web 服务
         return;
     }
     const content = await s.getContent();
