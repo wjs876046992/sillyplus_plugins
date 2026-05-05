@@ -1,0 +1,33 @@
+{
+    "name": "sillyplus_plugins",
+    "version": "1.0.0",
+    "license": "MIT",
+    "private": true,
+    "workspaces": [
+        "*",
+        "!node_modules"
+    ],
+    "dependencies": {
+        "axios": "^1.7.9",
+        "crypto-js": "^4.1.1",
+        "express": "^4.21.2",
+        "ioredis": "^5.3.2",
+        "moment": "^2.29.4",
+        "mongoose": "^5.13.3",
+        "qs": "^6.12.1",
+        "tunnel": "^0.0.6",
+        "uuid": "^9.0.1"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.25.2",
+        "@babel/preset-env": "^7.25.4",
+        "babel-loader": "^9.2.1",
+        "javascript-obfuscator": "^4.1.1",
+        "terser-webpack-plugin": "^5.3.10",
+        "webpack": "^5.95.0",
+        "webpack-bundle-analyzer": "^4.10.2",
+        "webpack-cli": "^5.1.4",
+        "webpack-merge": "^6.0.1",
+        "webpack-node-externals": "^3.0.0"
+    }
+}

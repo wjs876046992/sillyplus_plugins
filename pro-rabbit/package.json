@@ -1,0 +1,11 @@
+{
+    "name": "pro-rabbit",
+    "version": "1.0.0",
+    "license": "MIT",
+    "description": "兔子登录插件",
+    "dependencies": {
+        "axios": "^1.7.9",
+        "crypto-js": "^4.1.1",
+        "moment": "^2.29.4"
+    }
+}
