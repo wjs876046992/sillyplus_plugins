@@ -1,4 +1,3 @@
-global.sillygirl = require('sillygirl');
 /**
  * @name QQ Bot 适配器
  * @author 落幕尽繁华
