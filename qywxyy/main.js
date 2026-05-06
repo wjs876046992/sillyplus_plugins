@@ -1,4 +1,3 @@
-global.sillygirl = require('sillygirl');
 /**
  * @name 企业微信应用适配器
  * @author 落幕尽繁华
