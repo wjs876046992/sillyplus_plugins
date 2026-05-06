@@ -21,7 +21,7 @@
  * @create_at 2099-01-01 10:10:00
  * @icon https://img.icons8.com/?size=100&id=XBzV4XQFhfnk&format=png&color=000000
  */
-const {OpenAI} = require('openai');  // 这个是官方 SDK
+const {OpenAI} = require('openai'), https = require('https');
 const {console, sender, Bucket} = require('sillygirl');
 
 // 初始化对话历史
@@ -93,7 +93,10 @@ const init = async () => {
 
     // 配置 OpenAI API 密钥
     openai = new OpenAI({
-        baseURL, apiKey
+        baseURL, apiKey,
+        httpAgent: new https.Agent({
+            rejectUnauthorized: false
+        })
     });
 }
 

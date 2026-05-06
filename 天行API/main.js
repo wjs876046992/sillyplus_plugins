@@ -33,31 +33,26 @@ const {sender: s, Bucket, utils: {image}} = require('sillygirl');
 
     if (is_z) {
         const money = content.slice(2)
-        const {data: body} = await axios(`https://apis.tianapi.com/cnmoney/index?key=${key}&money=${money}`, {
-            responseType: 'text'
-        })
-        const data = JSON.parse(body)
+        const {data} = await axios(`https://apis.tianapi.com/cnmoney/index?key=${key}&money=${money}`)
 
         await s.reply(`${data.result.cnresult}`)
+        return;
     }
 
     const is_che = content.match(/^[黑吉辽冀甘青陕豫鲁晋皖鄂湘苏川黔滇浙赣粤闽台琼新蒙宁桂藏京沪津渝港澳][A-Za-z]$/);
     if (is_che) {
-        const {body} = await request(`https://apis.tianapi.com/chepai/index?key=${key}&word=${encodeURIComponent(content)}`)
-        const data = JSON.parse(body)
+        const {data} = await axios(`https://apis.tianapi.com/chepai/index?key=${key}&word=${encodeURIComponent(content)}`)
         if (data.code !== 200) {
             return await s.reply(`未查到车牌归属地信息`)
         }
 
         await s.reply(`${data.result.province}${data.result.city}(${data.result.citycode})`)
+        return;
     }
 
     const is_mrhj = content === '每日好句'
     if (is_mrhj) {
-        const {data: body} = await axios(`https://apis.tianapi.com/one/index?key=${key}`, {
-            responseType: 'text'
-        })
-        const data = JSON.parse(body)
+        const {data} = await axios(`https://apis.tianapi.com/one/index?key=${key}`)
         if (data.code !== 200) {
             return
         }
@@ -71,6 +66,7 @@ const {sender: s, Bucket, utils: {image}} = require('sillygirl');
         } else {
             await s.reply(word)
         }
+        return;
     }
 
 })()
