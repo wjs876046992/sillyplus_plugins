@@ -20,7 +20,7 @@ const {
     sleep,
     utils: {parseCQText, buildCQTag},
     console
-} = require("@mod/platform");
+} = require("sillygirl");
 
 const {Telegraf} = require("telegraf");
 const db = new Bucket("tg");

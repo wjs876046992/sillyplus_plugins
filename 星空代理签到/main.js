@@ -18,8 +18,8 @@
  */
 
 const axios = require('axios'), qs = require('qs');
-const {sender: s, Bucket, sleep, Adapter, console} = require('@mod/platform');
-const { getBotAndMaster } = require('@mod/func').utils;
+const {sender: s, Bucket, sleep, Adapter, console} = require('sillygirl');
+const { getBotAndMaster } = require('sillygirl').utils;
 
 let username, password
 
