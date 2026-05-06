@@ -1,4 +1,3 @@
-global.sillygirl = require('sillygirl');
 /**
  * @name 佣金结算
  * @author 落幕尽繁华

@@ -1,4 +1,3 @@
-global.sillygirl = require('sillygirl');
 /**
  * @name 京东资产查询
  * @author 落幕尽繁华

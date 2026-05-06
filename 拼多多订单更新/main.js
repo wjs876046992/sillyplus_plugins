@@ -1,4 +1,3 @@
-global.sillygirl = require('sillygirl');
 /**
  * @name 拼多多订单更新
  * @author 落幕尽繁华

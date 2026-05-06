@@ -1,4 +1,3 @@
-global.sillygirl = require('sillygirl');
 /**
  * @name 京东口令解析
  * @author 落幕尽繁华
