@@ -15,14 +15,16 @@
  * @create_at 2099-01-01 20:20:00
  * @icon https://img.icons8.com/?size=100&id=DJWlbd0VP2As&format=png&color=000000
  */
-const {Bucket, console, sender: s} = require('sillygirl');
+const {console, sender: s} = require('sillygirl');
 const {spawn} = require('child_process');
+const fs = require('fs');
+const path = require('path');
 let plt;
 
 const _log = async (msg) => {
     if (plt === '*') {
         console.log(msg);
-    } else if (!plt) {
+    } else if (plt) {
         await s.reply(msg);
     }
 }
@@ -81,7 +83,7 @@ const installYarnDeps = async (nodeExec, yarnExec, pluginsDir) => {
         yarnExec,
         [
             'install',
-            '--production'
+            // '--production'
         ],
         {
             cwd: pluginsDir
@@ -93,15 +95,6 @@ const installYarnDeps = async (nodeExec, yarnExec, pluginsDir) => {
 };
 
 const installDeps = async () => {
-    const webServiceDB = new Bucket('web_service');
-    let install_package = JSON.parse(await webServiceDB.get('install_package', 'true'));
-    if (!install_package) {
-        await _log('已设置不自动安装包管理, 如需安装请发送“set web_service install_package true”');
-        return;
-    }
-
-    const fs = require('fs');
-    const path = require('path');
     // 获取父目录路径 => /path/to/plugins
     const pluginsDir = path.resolve(__dirname, '..');
     await _log(`插件目录: ${pluginsDir}`);
