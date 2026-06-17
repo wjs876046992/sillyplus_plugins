@@ -1,8 +1,9 @@
 /**
  * @name Telegram机器人适配器
- * @version 1.0.5
+ * @version 1.0.6
  * @description Telegraf Node版本实现Telegram Bot。
  * v1.0.5 修复了消息回复问题
+ * v1.0.6 修复了多媒体文件发送问题
  * @form {key: "tg.token", title: "机器人Token"}
  * @form {key: "tg.url", title: "反向代理地址"}
  * @form {key: "tg.proxy", title: "代理地址", tooltip: "http代理地址"}
@@ -171,30 +172,26 @@ async function handleReply(bot, message) {
         else if (images.length > 1 || videos.length > 1) {
             const media = [];
 
-            // 下载所有图片
+            // 图片
             for (let i = 0; i < images.length; i++) {
-                const filePath = await downloadToTemp(images[i]);
-                tempFiles.push(filePath);
                 media.push({
                     type: "photo",
-                    media: {source: filePath},
+                    media: images[i],
                     ...(i === 0 && textContent ? {caption: textContent} : {})
                 });
             }
 
-            // 下载所有视频
+            // 视频
             for (let i = 0; i < videos.length; i++) {
-                const filePath = await downloadToTemp(videos[i]);
-                tempFiles.push(filePath);
                 media.push({
                     type: "video",
-                    media: {source: filePath},
+                    media: videos[i],
                     ...(i === 0 && textContent ? {caption: textContent} : {})
                 });
             }
             if (media.length === 0) return;
 
-            // 拆分为每组最多10个的子数组
+            // 拆分为每组最多10个
             const mediaChunks = chunkArray(media, 10);
             result = [];
 

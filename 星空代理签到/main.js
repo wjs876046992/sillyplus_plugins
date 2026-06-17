@@ -19,9 +19,24 @@
 
 const axios = require('axios'), qs = require('qs');
 const {sender: s, Bucket, sleep, Adapter, console} = require('sillygirl');
-const { getBotAndMaster } = require('sillygirl').utils;
 
 let username, password
+
+// 内联 getBotAndMaster（原 mod_func/utils.js）
+const getBotAndMaster = async (platform = 'tg') => {
+    const x = new Bucket(platform)
+    let bot_id = await x.get('bot_id', false)
+    if (platform.startsWith('tg')) {
+        const token = await x.get('token', null);
+        if (token && token.indexOf(':') > -1) {
+            bot_id = token.split(':')[0]
+        }
+    }
+    const adminStr = await x.get('masters', "")
+    let admin = (adminStr && (adminStr?.indexOf('&') === 0 ? adminStr?.split('&')[1] : adminStr?.split('&')[0])) ?? null
+    console.debug(`Bot and Master. bot_id: ${bot_id}, admin: ${admin}, platform: ${platform}`)
+    return {bot_id, admin, platform}
+}
 
 const extractSetCookie = (headers) => {
     let cks

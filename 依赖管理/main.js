@@ -19,13 +19,14 @@ const {console, sender: s} = require('sillygirl');
 const {spawn} = require('child_process');
 const fs = require('fs');
 const path = require('path');
-let plt;
+let plt, messages = [];
 
 const _log = async (msg) => {
     if (plt === '*') {
         console.log(msg);
     } else if (plt) {
-        await s.reply(msg);
+        // await s.reply(msg);
+        messages.push(msg);
     }
 }
 
@@ -83,7 +84,8 @@ const installYarnDeps = async (nodeExec, yarnExec, pluginsDir) => {
         yarnExec,
         [
             'install',
-            // '--production'
+            '--force',
+            '--no-bin-links'
         ],
         {
             cwd: pluginsDir
@@ -117,6 +119,7 @@ const installDeps = async () => {
         "dependencies": {
             "axios": "^1.13.5",
             "crypto-js": "^4.1.1",
+            "https-proxy-agent": "^7.0.6",
             "moment": "^2.29.4",
             "mongoose": "^6.13.8",
             "qs": "^6.14.2",
@@ -126,7 +129,7 @@ const installDeps = async () => {
     };
     // 写入 package.json 文件
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJsonContent, null, 4), {encoding: 'utf8'});
-    await _log(`已创建 package.json 文件`)
+    await _log(`已创建 package\.json 文件`)
 
     // 设置 Yarn registry
     const {
@@ -161,11 +164,13 @@ const installDeps = async () => {
 // 依赖管理
 (async () => {
     plt = await s.getPlatform();
+    messages = [];
     const content = await s.getContent();
     console.log(`install deps... plt = ${plt}, content = ${content}`);
     if (plt === '*' || content === '修复依赖') {
-        await installDeps().catch(async (err) => {
-            await _log('依赖安装失败:', err);
-        });
+        await installDeps();
+    }
+    if (messages.length > 0) {
+        await s.reply(messages.join('\n'));
     }
 })();
