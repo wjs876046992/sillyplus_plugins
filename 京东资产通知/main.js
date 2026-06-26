@@ -2,7 +2,7 @@
  * @name 京东资产通知
  * @author 落幕尽繁华
  * @origin 小白兔🐰
- * @version 1.0.8
+ * @version v1.0.8
  * @description 配合计划任务，定时推送京东资产通知
  * v1.0.1 修复查询逻辑，仅通知到wxpusher账号，需要在青龙备注里配置了UID
  * v1.0.2 适配qinglong的存储方式

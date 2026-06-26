@@ -1,6 +1,6 @@
 /**
  * @name Telegram机器人适配器
- * @version 1.0.6
+ * @version v1.0.6
  * @description Telegraf Node版本实现Telegram Bot。
  * v1.0.5 修复了消息回复问题
  * v1.0.6 修复了多媒体文件发送问题

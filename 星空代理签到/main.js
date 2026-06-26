@@ -12,7 +12,6 @@
  * @public true
  * @admin true
  * @class 签到
- * @create_at
  * @create_at 2099-01-01 10:08:00
  * @icon https://img.icons8.com/?size=100&id=XLIuxTGpTMJ1&format=png&color=000000
  */

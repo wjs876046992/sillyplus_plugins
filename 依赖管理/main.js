@@ -2,7 +2,7 @@
  * @name 依赖管理
  * @author 落幕尽繁华
  * @origin 小白兔🐰
- * @version 1.0.0
+ * @version v1.0.0
  * @description 该插件会自动安装小白兔插件所须依赖，所以需要时间比较长，安装时请耐心等待。
  * v1.0.0 删除dev依赖，修复依赖调整
  * @rule 修复依赖

@@ -2,7 +2,7 @@
  * @name 京东资产查询
  * @author 落幕尽繁华
  * @origin 小白兔🐰
- * @version 1.0.7
+ * @version v1.0.7
  * @description 京东资产查询
  * 指令：查询 [序号]
  * v1.0.1 修复查询逻辑
