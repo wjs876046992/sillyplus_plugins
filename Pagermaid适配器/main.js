@@ -12,7 +12,7 @@
  * @service true
  * @ws /bot/pagermaid
  * @create_at 2099-01-01 12:10:49
- * @icon https://img.icons8.com/?size=100&id=84804&format=png
+ * @icon https://img.icons8.com/?size=100&id=q7wteb2_yVxu&format=png&color=000000
  */
 const { start } = require('./modules');
 

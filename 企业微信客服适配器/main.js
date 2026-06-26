@@ -14,7 +14,7 @@
  * @http GET /api/bot/qywxkf
  * @http POST /api/bot/qywxkf
  * @create_at 2099-01-01 12:10:49
- * @icon https://img.icons8.com/?size=100&id=84804&format=png
+ * @icon https://wwcdn.weixin.qq.com/node/wework/images/48.262c2271dd.png
  */
 
 

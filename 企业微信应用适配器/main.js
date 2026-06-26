@@ -15,7 +15,7 @@
  * @http GET /api/bot/qywxyy
  * @http POST /api/bot/qywxyy
  * @create_at 2099-01-01 12:10:49
- * @icon https://img.icons8.com/?size=100&id=84804&format=png
+ * @icon https://img.icons8.com/?size=100&id=undefined&format=png&color=000000
  */
 
 

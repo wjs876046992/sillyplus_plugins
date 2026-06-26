@@ -1,6 +1,6 @@
 /**
  * @name Pro登录服务
- * @author Elena
+ * @author 落幕尽繁华
  * @origin 小白兔🐰
  * @version v1.0.0
  * @description dotnet9 Pro服务 - 账密登录、短信登录、扫码登录、wskey转换，交互式逐步引导

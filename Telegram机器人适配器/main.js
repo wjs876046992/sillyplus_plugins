@@ -1,5 +1,7 @@
 /**
  * @name Telegram机器人适配器
+ * @origin 小白兔🐰
+ * @author 落幕尽繁华
  * @version v1.0.6
  * @description Telegraf Node版本实现Telegram Bot。
  * v1.0.5 修复了消息回复问题
@@ -12,7 +14,7 @@
  * @on_start true
  * @class 机器人 Telegram
  * @create_at 2099-01-01 20:18:45
- * @icon https://upload.wikimedia.org/wikipedia/commons/8/83/Telegram_2019_Logo.svg
+ * @icon https://img.icons8.com/?size=100&id=63306&format=png&color=000000
  */
 
 const {
