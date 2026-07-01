@@ -2,7 +2,8 @@
  * @name 微信ClawBot适配器
  * @author 落幕尽繁华
  * @origin 小白兔🐰
- * @version v1.0.0
+ * @version v1.0.1
+ * v1.0.1 增加media支持
  * @description ilink-wechat 独立服务适配器，接收微信消息并回复。搭配https://github.com/ntwck/ilink-wechat使用
  * @form {key: "ilink.auth_token", title: "认证Token", tooltip: "可选，ilink请求时带在Authorization头中的token", required: false}
  * @form {key: "ilink.callback_url", title: "异步回调地址", tooltip: "异步模式下ilink的回调服务地址", required: false}
